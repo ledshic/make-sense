@@ -1,9 +1,10 @@
 import React from "react";
 import { connect } from "react-redux";
+import { Button } from "@mui/material";
 
 import TextInput from "../../Common/TextInput/TextInput";
-import { ImageButton } from "../../Common/ImageButton/ImageButton";
-import { Settings } from "../../../settings/Settings";
+// import { ImageButton } from "../../Common/ImageButton/ImageButton";
+// import { Settings } from "../../../settings/Settings";
 import { ProjectData } from "../../../store/general/types";
 import DropDownMenu from "./DropDownMenu/DropDownMenu";
 import StateBar from "../StateBar/StateBar";
@@ -17,6 +18,7 @@ import {
 import type { AppState } from "../../../store";
 
 import "./TopNavigationBar.scss";
+
 interface IProps {
   updateActivePopupTypeAction: (activePopupType: PopupWindowType) => any;
   updateProjectDataAction: (projectData: ProjectData) => any;
@@ -39,6 +41,8 @@ const TopNavigationBar: React.FC<IProps> = props => {
 
   const closePopup = () =>
     props.updateActivePopupTypeAction(PopupWindowType.EXIT_PROJECT);
+
+  const handleSubmit = () => console.log("submit");
 
   return (
     <div className="TopNavigationBar">
@@ -67,12 +71,15 @@ const TopNavigationBar: React.FC<IProps> = props => {
           />
         </div>
         <div className="NavigationBarGroupWrapper">
-          <ImageButton
+          {/* <ImageButton
             image={"ico/github-logo.png"}
             imageAlt={"github-logo.png"}
             buttonSize={{ width: 30, height: 30 }}
             href={Settings.GITHUB_URL}
-          />
+          /> */}
+          <Button onClick={handleSubmit}>
+            <span style={{ color: "#fff" }}>Submit</span>
+          </Button>
         </div>
       </div>
     </div>

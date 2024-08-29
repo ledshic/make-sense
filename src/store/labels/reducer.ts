@@ -12,6 +12,21 @@ const initialState: LabelsState = {
   labels: [],
 };
 
+export const imageDataTemplate: ImageData = {
+  id: "",
+  fileData: new File([], ""),
+  loadStatus: false,
+  labelRects: [],
+  labelPoints: [],
+  labelLines: [],
+  labelPolygons: [],
+  labelNameIds: [],
+  isVisitedByYOLOObjectDetector: false,
+  isVisitedBySSDObjectDetector: false,
+  isVisitedByPoseDetector: false,
+  isVisitedByRoboflowAPI: false,
+};
+
 export function labelsReducer(
   state = initialState,
   action: LabelsActionTypes

@@ -1,9 +1,10 @@
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 import { connect } from "react-redux";
 import { Direction } from "../../../data/enums/Direction";
 import { ISize } from "../../../interfaces/ISize";
 import { Settings } from "../../../settings/Settings";
 import { AppState } from "../../../store";
+import { imageDataTemplate } from "../../../store/labels/reducer";
 import { ImageData } from "../../../store/labels/types";
 import ImagesList from "../SideNavigationBar/ImagesList/ImagesList";
 import LabelsToolkit from "../SideNavigationBar/LabelsToolkit/LabelsToolkit";
@@ -16,6 +17,7 @@ import { ContextType } from "../../../data/enums/ContextType";
 import EditorBottomNavigationBar from "../EditorBottomNavigationBar/EditorBottomNavigationBar";
 import EditorTopNavigationBar from "../EditorTopNavigationBar/EditorTopNavigationBar";
 import { ProjectType } from "../../../data/enums/ProjectType";
+import { get } from "lodash";
 
 interface IProps {
   windowSize: ISize;
@@ -106,6 +108,11 @@ const EditorContainer: React.FC<IProps> = ({
     return <LabelsToolkit />;
   };
 
+  const activeImg = useMemo(
+    () => get(imagesData, activeImageIndex, imageDataTemplate),
+    [imagesData, activeImageIndex]
+  );
+
   return (
     <div className="EditorContainer">
       <SideNavigationBar
@@ -126,11 +133,11 @@ const EditorContainer: React.FC<IProps> = ({
         )}
         <Editor
           size={calculateEditorSize()}
-          imageData={imagesData[activeImageIndex]}
+          imageData={activeImg}
           key="editor"
         />
         <EditorBottomNavigationBar
-          imageData={imagesData[activeImageIndex]}
+          imageData={activeImg}
           size={calculateEditorSize()}
           totalImageCount={imagesData.length}
           key="editor-bottom-navigation-bar"

@@ -76,9 +76,9 @@ class Editor extends React.Component<IProps, IState> {
   }
 
   public componentDidUpdate(
-    prevProps: Readonly<IProps>,
-    prevState: Readonly<{}>,
-    snapshot?: any
+    prevProps: Readonly<IProps>
+    // prevState: Readonly<{}>,
+    // snapshot?: any
   ): void {
     const { imageData, activeLabelType } = this.props;
 
@@ -130,7 +130,7 @@ class Editor extends React.Component<IProps, IState> {
           this.saveLoadedImage(image, imageData);
         FileUtil.loadImage(imageData.fileData)
           .then((image: HTMLImageElement) => saveLoadedImagePartial(image))
-          .catch(error => this.handleLoadImageError());
+          .catch(this.handleLoadImageError);
       }
     }
   };
@@ -145,7 +145,8 @@ class Editor extends React.Component<IProps, IState> {
     this.updateModelAndRender();
   };
 
-  private handleLoadImageError = () => {};
+  private handleLoadImageError = err =>
+    console.error(err.message || "Error loading image");
 
   // =================================================================================================================
   // HELPER METHODS

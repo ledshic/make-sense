@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useMemo } from "react";
 import "./EditorBottomNavigationBar.scss";
 import { ImageData } from "../../../store/labels/types";
 import { AppState } from "../../../store";
@@ -8,6 +8,7 @@ import { ISize } from "../../../interfaces/ISize";
 import { ContextType } from "../../../data/enums/ContextType";
 import classNames from "classnames";
 import { ImageActions } from "../../../logic/actions/ImageActions";
+import { get } from "lodash";
 
 interface IProps {
   size: ISize;
@@ -36,6 +37,11 @@ const EditorBottomNavigationBar: React.FC<IProps> = ({
     });
   };
 
+  const filename = useMemo(
+    () => get(imageData, "fileData.name", ""),
+    [imageData]
+  );
+
   return (
     <div className={getClassName()}>
       <ImageButton
@@ -47,7 +53,7 @@ const EditorBottomNavigationBar: React.FC<IProps> = ({
         externalClassName={"left"}
       />
       {size.width > minWidth ? (
-        <div className="CurrentImageName"> {imageData.fileData.name} </div>
+        <div className="CurrentImageName"> {filename} </div>
       ) : (
         <div className="CurrentImageCount"> {getImageCounter()} </div>
       )}

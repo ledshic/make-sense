@@ -7,12 +7,13 @@ import {
   updateImageDataById,
 } from "../../../../store/labels/actionCreators";
 import { AppState } from "../../../../store";
+import { imageDataTemplate } from "../../../../store/labels/reducer";
 import { connect } from "react-redux";
 import { LabelType } from "../../../../data/enums/LabelType";
 import { ProjectType } from "../../../../data/enums/ProjectType";
 import { ISize } from "../../../../interfaces/ISize";
 import classNames from "classnames";
-import { find } from "lodash";
+import { find, get } from "lodash";
 import {
   ILabelToolkit,
   LabelToolkitData,
@@ -92,6 +93,9 @@ class LabelsToolkit extends React.Component<IProps, IState> {
   private renderChildren = () => {
     const { size } = this.state;
     const { activeImageIndex, imagesData, activeLabelType } = this.props;
+
+    const activeImg = get(imagesData, activeImageIndex, imageDataTemplate);
+
     return this.tabs.reduce((children, labelType: LabelType, index: number) => {
       const isActive: boolean = labelType === activeLabelType;
       const tabData: ILabelToolkit = find(LabelToolkitData, { labelType });
@@ -142,7 +146,7 @@ class LabelsToolkit extends React.Component<IProps, IState> {
                 width: size.width - 20,
                 height: activeTabContentHeight - 20,
               }}
-              imageData={imagesData[activeImageIndex]}
+              imageData={activeImg}
             />
           )}
           {labelType === LabelType.POINT && (
@@ -151,7 +155,7 @@ class LabelsToolkit extends React.Component<IProps, IState> {
                 width: size.width - 20,
                 height: activeTabContentHeight - 20,
               }}
-              imageData={imagesData[activeImageIndex]}
+              imageData={activeImg}
             />
           )}
           {labelType === LabelType.LINE && (
@@ -160,7 +164,7 @@ class LabelsToolkit extends React.Component<IProps, IState> {
                 width: size.width - 20,
                 height: activeTabContentHeight - 20,
               }}
-              imageData={imagesData[activeImageIndex]}
+              imageData={activeImg}
             />
           )}
           {labelType === LabelType.POLYGON && (
@@ -169,7 +173,7 @@ class LabelsToolkit extends React.Component<IProps, IState> {
                 width: size.width - 20,
                 height: activeTabContentHeight - 20,
               }}
-              imageData={imagesData[activeImageIndex]}
+              imageData={activeImg}
             />
           )}
           {labelType === LabelType.IMAGE_RECOGNITION && (
@@ -178,7 +182,7 @@ class LabelsToolkit extends React.Component<IProps, IState> {
                 width: size.width - 20,
                 height: activeTabContentHeight - 20,
               }}
-              imageData={imagesData[activeImageIndex]}
+              imageData={activeImg}
             />
           )}
         </div>

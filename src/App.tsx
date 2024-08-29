@@ -1,7 +1,7 @@
 import React from "react";
 import "./App.scss";
 import EditorView from "./views/EditorView/EditorView";
-import MainView from "./views/MainView/MainView";
+// import MainView from "./views/MainView/MainView";
 import { ProjectType } from "./data/enums/ProjectType";
 import { AppState } from "./store";
 import { connect } from "react-redux";
@@ -24,8 +24,8 @@ interface IProps {
   roboflowAPIDetails: RoboflowAPIDetails;
 }
 
-const App: React.FC<IProps> = ({
-  projectType,
+const App: React.FC<Partial<IProps>> = ({
+  // projectType,
   windowSize,
   isObjectDetectorLoaded,
   isPoseDetectionLoaded,
@@ -38,16 +38,26 @@ const App: React.FC<IProps> = ({
       !!PlatformModel.mobileDeviceData.os
     )
       return <MobileMainView />;
-    if (!projectType) return <MainView />;
-    else {
-      if (
-        windowSize.height < Settings.EDITOR_MIN_HEIGHT ||
-        windowSize.width < Settings.EDITOR_MIN_WIDTH
-      ) {
-        return <SizeItUpView />;
-      } else {
-        return <EditorView />;
-      }
+
+    // if (!projectType) return <MainView />;
+    // else {
+    //   if (
+    //     windowSize.height < Settings.EDITOR_MIN_HEIGHT ||
+    //     windowSize.width < Settings.EDITOR_MIN_WIDTH
+    //   ) {
+    //     return <SizeItUpView />;
+    //   } else {
+    //     return <EditorView />;
+    //   }
+    // }
+
+    if (
+      windowSize.height < Settings.EDITOR_MIN_HEIGHT ||
+      windowSize.width < Settings.EDITOR_MIN_WIDTH
+    ) {
+      return <SizeItUpView />;
+    } else {
+      return <EditorView />;
     }
   };
   const isAILoaded =

@@ -1,10 +1,10 @@
-@import '../../../settings/Settings';
+@import "../../../settings/Settings";
 
 .TopNavigationBar {
   align-self: stretch;
   min-height: $topNavigationBarHeight;
   background-color: $darkThemeFirstColor;
-  box-shadow: 0 0 6px 0 rgba(0,0,0,.2);
+  box-shadow: 0 0 6px 0 rgba(0, 0, 0, 0.2);
 
   display: flex;
   flex: 0 0 $topNavigationBarHeight;
@@ -67,7 +67,8 @@
 
       &:not(.disabled):hover {
         filter: brightness(35%) sepia(100%) hue-rotate(172deg) saturate(2000%); // fallback if new css variables are not supported by browser
-        filter: brightness(35%) sepia(100%) hue-rotate(var(--hue-value)) saturate(2000%);
+        filter: brightness(35%) sepia(100%) hue-rotate(var(--hue-value))
+          saturate(2000%);
       }
     }
 
