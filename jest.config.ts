@@ -1,11 +1,11 @@
-import type { Config } from '@jest/types';
+import type { Config } from "@jest/types";
 
 // Sync object
 const config: Config.InitialOptions = {
   rootDir: process.cwd(),
-  moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx'],
+  moduleFileExtensions: ["ts", "tsx", "js", "jsx"],
   transformIgnorePatterns: [],
-  testEnvironment: 'jsdom',
+  testEnvironment: "jsdom",
   roots: ["<rootDir>/src"],
   setupFilesAfterEnv: ["<rootDir>/src/configureTest.ts"],
   transform: {
@@ -15,15 +15,15 @@ const config: Config.InitialOptions = {
         jsc: {
           transform: {
             react: {
-              runtime: 'automatic',
+              runtime: "automatic",
             },
           },
         },
       },
     ],
   },
-  "moduleNameMapper": {
-    "\\.(css|scss|less)$": "identity-obj-proxy"
+  moduleNameMapper: {
+    "\\.(css|scss|less)$": "identity-obj-proxy",
   },
   extensionsToTreatAsEsm: [".ts", ".tsx"],
   collectCoverageFrom: [

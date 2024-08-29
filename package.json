@@ -38,7 +38,8 @@
     "preview": "vite preview --host --port 3000",
     "test": "jest",
     "test:coverage": "jest --coverage",
-    "lint": "eslint src/**/*.ts src/**.tsx"
+    "lint": "eslint src/**/*.ts src/**.tsx",
+    "format": "prettier --write \"**/*.{ts,tsx}\""
   },
   "browserslist": {
     "production": [

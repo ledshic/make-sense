@@ -1,5 +1,5 @@
 export interface MobileDeviceData {
-    manufacturer: string,
-    browser: string,
-    os: string
+  manufacturer: string;
+  browser: string;
+  os: string;
 }
