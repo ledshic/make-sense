@@ -1,20 +1,22 @@
 import React from "react";
-import "./TopNavigationBar.scss";
-import StateBar from "../StateBar/StateBar";
-import { PopupWindowType } from "../../../data/enums/PopupWindowType";
-import { AppState } from "../../../store";
 import { connect } from "react-redux";
-import {
-  updateActivePopupType,
-  updateProjectData,
-} from "../../../store/general/actionCreators";
+
 import TextInput from "../../Common/TextInput/TextInput";
 import { ImageButton } from "../../Common/ImageButton/ImageButton";
 import { Settings } from "../../../settings/Settings";
 import { ProjectData } from "../../../store/general/types";
 import DropDownMenu from "./DropDownMenu/DropDownMenu";
-import { Button } from "@mui/material";
+import StateBar from "../StateBar/StateBar";
+import { PopupWindowType } from "../../../data/enums/PopupWindowType";
 
+import {
+  updateActivePopupType,
+  updateProjectData,
+} from "../../../store/general/actionCreators";
+
+import type { AppState } from "../../../store";
+
+import "./TopNavigationBar.scss";
 interface IProps {
   updateActivePopupTypeAction: (activePopupType: PopupWindowType) => any;
   updateProjectDataAction: (projectData: ProjectData) => any;
@@ -70,12 +72,6 @@ const TopNavigationBar: React.FC<IProps> = props => {
             imageAlt={"github-logo.png"}
             buttonSize={{ width: 30, height: 30 }}
             href={Settings.GITHUB_URL}
-          />
-          <Button
-            variant="contained"
-            color="primary"
-            onClick={closePopup}
-            style={{ marginLeft: "10px" }}
           />
         </div>
       </div>
