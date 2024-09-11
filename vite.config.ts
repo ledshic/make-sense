@@ -9,6 +9,20 @@ export default ({ mode }: UserConfig): UserConfigExport => {
   };
   return defineConfig({
     plugins: [react()],
+    server: {
+      port: 3000,
+      open: true,
+      hmr: {
+        overlay: true,
+      },
+      proxy: {
+        "/api": {
+          target: process.env.VITE_DEV_SERVER || "http://localhost:8000",
+          changeOrigin: true,
+          secure: false,
+        },
+      },
+    },
     build: {
       minify: "terser",
       sourcemap: mode === "development",

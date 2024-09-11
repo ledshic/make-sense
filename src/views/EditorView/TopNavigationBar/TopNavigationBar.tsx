@@ -9,6 +9,7 @@ import { ProjectData } from "../../../store/general/types";
 import DropDownMenu from "./DropDownMenu/DropDownMenu";
 import StateBar from "../StateBar/StateBar";
 import { PopupWindowType } from "../../../data/enums/PopupWindowType";
+import LoginButton from "../../Common/LoginButton/LoginButton";
 
 import {
   updateActivePopupType,
@@ -71,12 +72,7 @@ const TopNavigationBar: React.FC<IProps> = props => {
           />
         </div>
         <div className="NavigationBarGroupWrapper">
-          {/* <ImageButton
-            image={"ico/github-logo.png"}
-            imageAlt={"github-logo.png"}
-            buttonSize={{ width: 30, height: 30 }}
-            href={Settings.GITHUB_URL}
-          /> */}
+          <LoginButton />
           <Button onClick={handleSubmit}>
             <span style={{ color: "#fff" }}>Submit</span>
           </Button>

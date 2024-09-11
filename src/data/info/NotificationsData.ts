@@ -68,4 +68,10 @@ export const NotificationsDataMap: ExportFormatDataMap = {
       "Looks like we ware unable to connect to your Roboflow model. Please, make sure that the model " +
       "specification and Roboflow API key, are correct.",
   },
+  [Notification.SERVER_ERROR]: {
+    header: "Internal Server error",
+    description:
+      "Looks like we have encountered some problems on server side. Please, try again later. If the problem " +
+      "persists, please contact @Tangwenhan.",
+  },
 };

@@ -18,6 +18,7 @@ rules:
     - warn
     - extensions:
         - .tsx
+  react/react-in-jsx-scope: off
   complexity:
     - error
     - 15
