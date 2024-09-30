@@ -54,11 +54,11 @@ interface FetchListResponse<T> extends FetchResponse {
 }
 
 export const getAuthorization = () => {
-  const str_token = localStorage.getItem("outbook-token");
-
   try {
-    const obj_token = JSON.parse(str_token || "");
-    return `${obj_token.token_type} ${obj_token.access_token}`;
+    const str_token =
+      sessionStorage.getItem("outbook-token") ||
+      localStorage.getItem("outbook-token");
+    return str_token;
   } catch (err) {
     return "";
   }
@@ -142,12 +142,30 @@ const jsonResponse: (response: any) => Promise<any> = async response => {
     throw error;
   }
   const res = await response.json();
-  if (Number(res.code) !== undefined && Number(res.code) > 0) {
+  if (Number(res.code) !== undefined && Number(res.code) !== 200) {
     const error = new ActionError("action fail") as ActError;
     error.code = res.code;
     error.message = res.message;
+
+    store.dispatch(
+      submitNewNotification(
+        NotificationUtil.createErrorNotification({
+          header: res.code,
+          description: res.message,
+        })
+      )
+    );
     throw error;
   }
+
+  store.dispatch(
+    submitNewNotification(
+      NotificationUtil.createMessageNotification({
+        header: res.code,
+        description: res.message,
+      })
+    )
+  );
   return res;
 };
 
@@ -166,6 +184,7 @@ const request: Request = {
     return fetch(url, options)
       .then(jsonResponse)
       .catch(err => {
+        console.log("request failed", err);
         return Promise.reject(err);
       });
   },

@@ -16,6 +16,7 @@ import LoadModelPopup from "./LoadModelPopup/LoadModelPopup";
 import LoadYOLOv5ModelPopup from "./LoadYOLOv5ModelPopup/LoadYOLOv5ModelPopup";
 import ConnectInferenceServerPopup from "./ConnectInferenceServerPopup/ConnectInferenceServerPopup";
 import UserLoginPopup from "./UserLoginPopup/UserLoginPopup";
+import UserRegisterPopup from "./UserRegisterPopup/UserRegisterPopup";
 
 interface IProps {
   activePopupType: PopupWindowType;
@@ -56,6 +57,8 @@ const PopupView: React.FC<IProps> = ({ activePopupType }) => {
         );
       case PopupWindowType.USER_LOGIN:
         return <UserLoginPopup />;
+      case PopupWindowType.USER_REGISTER:
+        return <UserRegisterPopup />;
       default:
         return null;
     }

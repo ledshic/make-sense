@@ -102,8 +102,8 @@ export class VirtualList extends React.Component<IProps, IState> {
 
   private getVirtualListContentStyle = (): React.CSSProperties => {
     return {
-      width: this.contentSize.width,
-      height: this.contentSize.height,
+      width: this.contentSize.width || 0,
+      height: this.contentSize.height || 0,
     };
   };
 
@@ -151,8 +151,8 @@ export class VirtualList extends React.Component<IProps, IState> {
             position: "absolute",
             left: anchor.x,
             top: anchor.y,
-            width: childSize.width,
-            height: childSize.height,
+            width: childSize.width || 0,
+            height: childSize.height || 0,
           };
 
           return children.concat(
