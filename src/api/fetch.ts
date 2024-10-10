@@ -5,8 +5,9 @@ import { MD5 } from "crypto-js";
 import { store } from "../index";
 import { submitNewNotification } from "../store/notifications/actionCreators";
 import { NotificationUtil } from "../utils/NotificationUtil";
-import { NotificationsDataMap } from "../data/info/NotificationsData";
-import { Notification } from "../data/enums/Notification";
+import { getToken, setTokenTemp } from "src/utils/storage/token";
+import { updateActivePopupType } from "src/store/general/actionCreators";
+import { PopupWindowType } from "src/data/enums/PopupWindowType";
 
 export class ResponseError extends Error {}
 export class ActionError extends Error {}
@@ -55,10 +56,8 @@ interface FetchListResponse<T> extends FetchResponse {
 
 export const getAuthorization = () => {
   try {
-    const str_token =
-      sessionStorage.getItem("outbook-token") ||
-      localStorage.getItem("outbook-token");
-    return str_token;
+    const str_token = getToken();
+    return `Bearer ${str_token}`;
   } catch (err) {
     return "";
   }
@@ -85,15 +84,19 @@ export interface Request {
     url: string,
     params?: ExtendableListParams<U>
   ) => Promise<FetchListResponse<T>>;
+  upload: (
+    url: string,
+    data: FormData,
+    headers?: any,
+    requestOptions?: RequestOptions
+  ) => Promise<any>;
 }
 
 const defaultHeaders = (hasToken = true, params?: any) => {
   let headers = {
-    "Content-Type": "application/json",
     "X-Platform": "web",
     "x-client-type": "teacher",
     credentials: "include",
-    Accept: "application/json",
   };
   if (params) {
     let sign = "";
@@ -117,63 +120,57 @@ const defaultHeaders = (hasToken = true, params?: any) => {
 };
 
 const jsonResponse: (response: any) => Promise<any> = async response => {
-  console.log("response", response);
-  if (!response.ok) {
-    const error = new ResponseError("bad response") as ResError;
-    error.status = response.status;
-    error.message = response.statusText;
-    error.url = response.url;
-    error.headers = response.headers;
-    error.responseText = await response.text();
-    // 401 token过期
-    if (response.status === 401) {
-      error.message = "请先登录";
-      localStorage.setItem("outbook-token", "");
-    }
-    if (response.status === 500) {
-      store.dispatch(
-        submitNewNotification(
-          NotificationUtil.createErrorNotification(
-            NotificationsDataMap[Notification.SERVER_ERROR]
-          )
-        )
-      );
-    }
-    throw error;
-  }
-  const res = await response.json();
-  if (Number(res.code) !== undefined && Number(res.code) !== 200) {
-    const error = new ActionError("action fail") as ActError;
-    error.code = res.code;
-    error.message = res.message;
+  try {
+    console.log("response", response);
+    if (!response.ok) {
+      const error = new ResponseError("bad response") as ResError;
+      error.status = response.status;
+      error.message = response.statusText;
+      error.url = response.url;
+      error.headers = response.headers;
+      error.responseText = await response.text();
+      // 401 token过期
+      if (response.status === 401) {
+        error.message = "invalid token";
+        setTokenTemp("");
+        store.dispatch(updateActivePopupType(PopupWindowType.USER_LOGIN));
+      }
 
+      throw error;
+    }
+    const res = await response.json();
+    if (Number(res.code) !== undefined && Number(res.code) !== 200) {
+      const error = new ActionError("action fail") as ActError;
+      error.code = res.code;
+      error.message = res.message;
+
+      throw error;
+    }
+
+    return res;
+  } catch (error) {
+    console.log("fetch error", error);
     store.dispatch(
       submitNewNotification(
         NotificationUtil.createErrorNotification({
-          header: res.code,
-          description: res.message,
+          header: String((error as ActError).code),
+          description: (error as ActError).message,
         })
       )
     );
     throw error;
   }
-
-  store.dispatch(
-    submitNewNotification(
-      NotificationUtil.createMessageNotification({
-        header: res.code,
-        description: res.message,
-      })
-    )
-  );
-  return res;
 };
 
 const request: Request = {
   get: async (url, params, headers, requestOptions) => {
     const { hasTokenInHeaders = true, signal } = requestOptions || {};
     const options = {
-      headers: Object.assign(defaultHeaders(hasTokenInHeaders), headers),
+      headers: Object.assign(
+        { "Content-Type": "application/json", Accept: "application/json" },
+        defaultHeaders(hasTokenInHeaders),
+        headers
+      ),
       method: "GET",
       signal,
     };
@@ -197,7 +194,11 @@ const request: Request = {
     const options = {
       method: "POST",
       body: stringify ? JSON.stringify(data || "") : data || "",
-      headers: Object.assign(defaultHeaders(hasTokenInHeaders), headers),
+      headers: Object.assign(
+        { "Content-Type": "application/json", Accept: "application/json" },
+        defaultHeaders(hasTokenInHeaders),
+        headers
+      ),
       signal,
       referrerPolicy: "no-referrer" as ReferrerPolicy,
       credential: "omit",
@@ -292,6 +293,20 @@ const request: Request = {
     });
 
     return fetch(`${url}?${qs.stringify(query)}`, { headers: defaultHeaders() })
+      .then(jsonResponse)
+      .catch(err => {
+        console.log("request failed", err);
+      });
+  },
+  upload: async (url, data, headers = {}, requestOptions) => {
+    const { hasTokenInHeaders = true } = requestOptions || {};
+
+    const options = {
+      method: "POST",
+      body: data,
+      headers: Object.assign(defaultHeaders(hasTokenInHeaders), headers),
+    };
+    return fetch(url, options)
       .then(jsonResponse)
       .catch(err => {
         console.log("request failed", err);

@@ -16,6 +16,8 @@ import { ContextType } from "../../../../data/enums/ContextType";
 import { ImageActions } from "../../../../logic/actions/ImageActions";
 import { EventType } from "../../../../data/enums/EventType";
 import { LabelStatus } from "../../../../data/enums/LabelStatus";
+import { toBeIdentified } from "src/api/image/to_be_identified";
+import { getToken } from "src/utils/storage/token";
 
 interface IProps {
   activeImageIndex: number;
@@ -41,6 +43,17 @@ class ImagesList extends React.Component<IProps, IState> {
   public componentDidMount(): void {
     this.updateListSize();
     window.addEventListener(EventType.RESIZE, this.updateListSize);
+
+    const token = getToken();
+    if (token) {
+      toBeIdentified({ pageNumber: 0, pageSize: 20 })
+        .then(res => {
+          console.log("get pics success", res);
+        })
+        .catch(err => {
+          console.log("get pics error", err);
+        });
+    }
   }
 
   public componentWillUnmount(): void {

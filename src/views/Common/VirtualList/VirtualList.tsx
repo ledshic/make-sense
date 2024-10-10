@@ -1,10 +1,30 @@
 import React from "react";
+import { Button } from "@mui/material";
+import { styled } from "@mui/material/styles";
+import CloudUploadIcon from "@mui/icons-material/CloudUpload";
+
+import { uploadUnidentifiedPics } from "src/api/image/upload";
 import { ISize } from "../../../interfaces/ISize";
 import { IRect } from "../../../interfaces/IRect";
 import Scrollbars from "react-custom-scrollbars-2";
 import { VirtualListUtil } from "../../../utils/VirtualListUtil";
 import { IPoint } from "../../../interfaces/IPoint";
 import { RectUtil } from "../../../utils/RectUtil";
+import { store } from "src/index";
+import { submitNewNotification } from "src/store/notifications/actionCreators";
+import { NotificationUtil } from "src/utils/NotificationUtil";
+
+const VisuallyHiddenInput = styled("input")({
+  clip: "rect(0 0 0 0)",
+  clipPath: "inset(50%)",
+  height: 1,
+  overflow: "hidden",
+  position: "absolute",
+  bottom: 0,
+  left: 0,
+  whiteSpace: "nowrap",
+  width: 1,
+});
 
 interface IProps {
   size: ISize;
@@ -51,11 +71,8 @@ export class VirtualList extends React.Component<IProps, IState> {
     });
   }
 
-  public componentWillUpdate(
-    nextProps: Readonly<IProps>,
-    nextState: Readonly<IState>,
-    nextContext: any
-  ): void {
+  // eslint-disable-next-line
+  public componentWillUpdate(nextProps: Readonly<IProps>): void {
     const { size, childSize, childCount } = nextProps;
     if (
       this.props.size.height !== size.height ||
@@ -129,7 +146,7 @@ export class VirtualList extends React.Component<IProps, IState> {
   private getChildren = () => {
     const { viewportRect, isScrolling } = this.state;
     const { overScanHeight, childSize } = this.props;
-    const overScan: number = !!overScanHeight ? overScanHeight : 0;
+    const overScan: number = overScanHeight ? overScanHeight : 0;
 
     const viewportRectWithOverScan: IRect = {
       x: viewportRect.x,
@@ -166,6 +183,32 @@ export class VirtualList extends React.Component<IProps, IState> {
     );
   };
 
+  private handleUploadPic = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const files = event.target.files;
+
+    if (files.length > 0) {
+      for (const file of files) {
+        console.log("uploading file", file);
+        uploadUnidentifiedPics(file)
+          .then(res => {
+            console.log("upload pic success", res);
+
+            store.dispatch(
+              submitNewNotification(
+                NotificationUtil.createMessageNotification({
+                  header: "Success",
+                  description: `File ${file.name} uploaded successfully`,
+                })
+              )
+            );
+          })
+          .catch(err => {
+            console.log("upload pic error", err);
+          });
+      }
+    }
+  };
+
   public render() {
     const displayContent =
       !!this.props.size && !!this.props.childSize && !!this.gridSize;
@@ -179,6 +222,32 @@ export class VirtualList extends React.Component<IProps, IState> {
           onScrollStop={this.onScrollStop}
           autoHide={true}
         >
+          <div
+            style={{
+              width: "100%",
+              display: "flex",
+              flexDirection: "column",
+              gap: "10px",
+              justifyContent: "center",
+              padding: "12px 36px",
+            }}
+          >
+            <Button
+              component="label"
+              role={undefined}
+              variant="contained"
+              tabIndex={-1}
+              startIcon={<CloudUploadIcon />}
+            >
+              Upload files
+              <VisuallyHiddenInput
+                type="file"
+                onChange={this.handleUploadPic}
+                multiple
+              />
+            </Button>
+          </div>
+
           {displayContent && (
             <div
               className="VirtualListContent"

@@ -1,7 +1,7 @@
-import request from '../fetch';
+import request from "../fetch";
 
-export const upload = async (file: File) => {
+export const uploadUnidentifiedPics = async (file: File) => {
   const formData = new FormData();
-  formData.append('file', file);
-  return request.post('/api/image/upload', formData);
+  formData.append("file", file);
+  return request.upload("/api/image/upload", formData);
 };

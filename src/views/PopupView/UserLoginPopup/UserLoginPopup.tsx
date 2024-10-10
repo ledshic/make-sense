@@ -9,6 +9,7 @@ import { updateActivePopupType } from "../../../store/general/actionCreators";
 import { PopupWindowType } from "../../../data/enums/PopupWindowType";
 
 import "./UserLoginPopup.scss";
+import { setTokenTemp } from "src/utils/storage/token";
 
 const UserLoginPopup = () => {
   const [account, setAccount] = useState("");
@@ -22,7 +23,7 @@ const UserLoginPopup = () => {
     manual: true,
     onSuccess: res => {
       console.log("login success", res);
-      sessionStorage.setItem("outbook-token", res.data);
+      setTokenTemp(res.data);
       closePopup();
     },
   });

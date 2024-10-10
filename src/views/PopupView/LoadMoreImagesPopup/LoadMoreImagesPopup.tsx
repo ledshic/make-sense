@@ -1,6 +1,5 @@
 import React from "react";
 import "./LoadMoreImagesPopup.scss";
-import { AppState } from "../../../store";
 import { connect } from "react-redux";
 import { addImageData } from "../../../store/labels/actionCreators";
 import { GenericYesNoPopup } from "../GenericYesNoPopup/GenericYesNoPopup";
@@ -10,10 +9,10 @@ import { PopupActions } from "../../../logic/actions/PopupActions";
 import { ImageDataUtil } from "../../../utils/ImageDataUtil";
 
 interface IProps {
-  addImageData: (imageData: ImageData[]) => any;
+  addImages: (imageData: ImageData[]) => void;
 }
 
-const LoadMoreImagesPopup: React.FC<IProps> = ({ addImageData }) => {
+const LoadMoreImagesPopup: React.FC<IProps> = ({ addImages }) => {
   const { acceptedFiles, getRootProps, getInputProps } = useDropzone({
     accept: {
       "image/*": [".jpeg", ".png"],
@@ -22,7 +21,8 @@ const LoadMoreImagesPopup: React.FC<IProps> = ({ addImageData }) => {
 
   const onAccept = () => {
     if (acceptedFiles.length > 0) {
-      addImageData(
+      console.log("acceptedFiles", acceptedFiles);
+      addImages(
         acceptedFiles.map((fileData: File) =>
           ImageDataUtil.createImageDataFromFileData(fileData)
         )
@@ -93,10 +93,10 @@ const LoadMoreImagesPopup: React.FC<IProps> = ({ addImageData }) => {
 };
 
 const mapDispatchToProps = {
-  addImageData,
+  addImages: addImageData,
 };
 
-const mapStateToProps = (state: AppState) => ({});
+const mapStateToProps = () => ({});
 
 export default connect(
   mapStateToProps,

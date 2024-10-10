@@ -1,5 +1,5 @@
 import { defineConfig, loadEnv, UserConfig, UserConfigExport } from "vite";
-
+import path from "path";
 import react from "@vitejs/plugin-react";
 
 export default ({ mode }: UserConfig): UserConfigExport => {
@@ -9,6 +9,11 @@ export default ({ mode }: UserConfig): UserConfigExport => {
   };
   return defineConfig({
     plugins: [react()],
+    resolve: {
+      alias: {
+        src: path.resolve(__dirname, "src"),
+      },
+    },
     server: {
       port: 3000,
       open: true,

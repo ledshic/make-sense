@@ -10,6 +10,7 @@ import { updateActivePopupType } from "../../../store/general/actionCreators";
 import { PopupWindowType } from "../../../data/enums/PopupWindowType";
 
 import "./UserRegisterPopup.scss";
+import { setTokenTemp } from "src/utils/storage/token";
 
 const UserRegisterPopup = () => {
   const [account, setAccount] = useState("");
@@ -24,7 +25,7 @@ const UserRegisterPopup = () => {
     manual: true,
     onSuccess: res => {
       console.log("login success", res);
-      sessionStorage.setItem("outbook-token", res.data);
+      setTokenTemp(res.data);
       closePopup();
     },
     onError: err => {

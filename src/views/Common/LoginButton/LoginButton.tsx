@@ -5,6 +5,7 @@ import { store } from "../../../index";
 import { updateActivePopupType } from "../../../store/general/actionCreators";
 import { PopupWindowType } from "../../../data/enums/PopupWindowType";
 import type { AppState } from "../../../store";
+import { getToken } from "src/utils/storage/token";
 
 const mapStateToProps = (state: AppState) => state;
 
@@ -17,7 +18,7 @@ const LoginButton: React.FC<IProps> = () => {
 
   let token = null;
   try {
-    token = sessionStorage.getItem("outbook-token");
+    token = getToken();
   } catch (error) {
     console.log("error", error);
     token = null;
@@ -25,10 +26,13 @@ const LoginButton: React.FC<IProps> = () => {
 
   return (
     <>
-      {token ? <Avatar sx={{ width: 24, height: 24 }} /> : null}
-      <Button onClick={handleLogin}>
-        <span style={{ color: "#fff" }}>Login</span>
-      </Button>
+      {token ? (
+        <Avatar sx={{ width: 24, height: 24 }} />
+      ) : (
+        <Button onClick={handleLogin}>
+          <span style={{ color: "#fff" }}>Login</span>
+        </Button>
+      )}
     </>
   );
 };

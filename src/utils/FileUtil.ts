@@ -65,4 +65,38 @@ export class FileUtil {
     }
     return fName;
   }
+
+  /**
+   * 将图片 URL 或 base64 编码转换为 File 对象
+   * @param imageUrl 图片的 URL 或 base64 编码
+   * @param filename 生成的 File 对象的文件名
+   * @returns Promise<File>
+   */
+  public static async imageToFile(
+    imageUrl: string,
+    filename: string
+  ): Promise<File> {
+    // 检查是否为 Base64 数据
+    if (imageUrl.startsWith("data:")) {
+      // 如果是 Base64 数据，则解析 Base64 并转换为 Blob
+      const [meta, base64Data] = imageUrl.split(",");
+      const mimeType = meta.match(/:(.*?);/)?.[1] || "image/png"; // 获取图片的 MIME 类型
+      const binary = atob(base64Data); // 解码 base64 数据
+      const array = new Uint8Array(binary.length);
+
+      // 将 base64 转换为二进制数组
+      for (let i = 0; i < binary.length; i++) {
+        array[i] = binary.charCodeAt(i);
+      }
+
+      // 创建 Blob 对象
+      const blob = new Blob([array], { type: mimeType });
+      return new File([blob], filename, { type: mimeType });
+    } else {
+      // 如果是 URL 数据，使用 fetch 获取数据并转换为 Blob
+      const response = await fetch(imageUrl);
+      const blob = await response.blob();
+      return new File([blob], filename, { type: blob.type });
+    }
+  }
 }
