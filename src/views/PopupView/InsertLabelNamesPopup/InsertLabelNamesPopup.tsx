@@ -1,5 +1,8 @@
-import React, { useState } from "react";
-import "./InsertLabelNamesPopup.scss";
+import React, { useEffect, useState } from "react";
+import { connect } from "react-redux";
+import { reject, sample, filter, uniq, map } from "lodash";
+import Scrollbars from "react-custom-scrollbars-2";
+
 import { GenericYesNoPopup } from "../GenericYesNoPopup/GenericYesNoPopup";
 import { PopupWindowType } from "../../../data/enums/PopupWindowType";
 import { updateLabelNames } from "../../../store/labels/actionCreators";
@@ -7,17 +10,14 @@ import {
   updateActivePopupType,
   updatePerClassColorationStatus,
 } from "../../../store/general/actionCreators";
-import { AppState } from "../../../store";
-import { connect } from "react-redux";
-import Scrollbars from "react-custom-scrollbars-2";
+import type { AppState } from "../../../store";
 import { ImageButton } from "../../Common/ImageButton/ImageButton";
-import { LabelName } from "../../../store/labels/types";
+import type { LabelName } from "../../../store/labels/types";
 import { LabelUtil } from "../../../utils/LabelUtil";
 import { LabelsSelector } from "../../../store/selectors/LabelsSelector";
 import { LabelActions } from "../../../logic/actions/LabelActions";
 import { ColorSelectorView } from "./ColorSelectorView/ColorSelectorView";
 import { Settings } from "../../../settings/Settings";
-import { reject, sample, filter, uniq } from "lodash";
 import { ProjectType } from "../../../data/enums/ProjectType";
 import { submitNewNotification } from "../../../store/notifications/actionCreators";
 import { INotification } from "../../../store/notifications/types";
@@ -25,6 +25,9 @@ import { NotificationUtil } from "../../../utils/NotificationUtil";
 import { NotificationsDataMap } from "../../../data/info/NotificationsData";
 import { Notification } from "../../../data/enums/Notification";
 import { StyledTextField } from "../../Common/StyledTextField/StyledTextField";
+import { useLabels } from "src/hooks/labels";
+
+import "./InsertLabelNamesPopup.scss";
 
 interface IProps {
   updateActivePopupTypeAction: (activePopupType: PopupWindowType) => any;
@@ -48,6 +51,12 @@ const InsertLabelNamesPopup: React.FC<IProps> = ({
   enablePerClassColoration,
 }) => {
   const [labelNames, setLabelNames] = useState(LabelsSelector.getLabelNames());
+
+  const { labels, update } = useLabels();
+
+  useEffect(() => {
+    console.log("labels", labels);
+  }, [labels]);
 
   const validateEmptyLabelNames = (): boolean => {
     const emptyLabelNames = filter(
@@ -138,6 +147,7 @@ const InsertLabelNamesPopup: React.FC<IProps> = ({
     const onDeleteCallback = () => deleteLabelNameCallback(labelName.id);
     const onChangeColorCallback = () =>
       changeLabelNameColorCallback(labelName.id);
+
     return (
       <div className="LabelEntry" key={labelName.id}>
         <StyledTextField
@@ -180,6 +190,12 @@ const InsertLabelNamesPopup: React.FC<IProps> = ({
     );
     if (labelNames.length > 0) {
       updateLabelNamesAction(nonEmptyLabelNames);
+      update(
+        map(nonEmptyLabelNames, (label, index) => ({
+          name: label.name,
+          number: index,
+        }))
+      ); // update labels in the backend
     }
     updateActivePopupTypeAction(null);
   };
@@ -198,6 +214,12 @@ const InsertLabelNamesPopup: React.FC<IProps> = ({
     );
     LabelActions.removeLabelNames(missingIds);
     updateLabelNamesAction(nonEmptyLabelNames);
+    update(
+      map(nonEmptyLabelNames, (label, index) => ({
+        name: label.name,
+        number: index,
+      }))
+    ); // update labels in the backend
     updateActivePopupTypeAction(null);
   };
 

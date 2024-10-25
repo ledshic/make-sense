@@ -1,11 +1,13 @@
-import { useDispatch } from "react-redux";
+// @not-used-yet
+
+import { useEffect } from "react";
+import { useSelector } from "react-redux";
 import { useRequest } from "ahooks";
 
 import { toBeIdentified } from "src/api/image/to_be_identified";
 import { getToken } from "src/utils/storage/token";
-import { useEffect } from "react";
-import { submitNewNotification } from "src/store/notifications/actionCreators";
-import { NotificationUtil } from "src/utils/NotificationUtil";
+
+import type { AppState } from "src/store";
 
 interface IProps {
   current: number;
@@ -18,32 +20,20 @@ const getPictures = async (page: number, pageSize: number) =>
   });
 
 const useUnidentifiedImages = ({ current, pageSize }: IProps) => {
-  const dispatch = useDispatch();
+  const imagesData = useSelector((state: AppState) => state.labels.imagesData);
 
   const token = getToken();
   const { run } = useRequest(getPictures, {
     manual: true,
-    onSuccess: res => {
-      console.log("get pics success", res);
-    },
   });
 
   useEffect(() => {
     if (token) {
       run(current, pageSize);
-    } else {
-      dispatch(
-        submitNewNotification(
-          NotificationUtil.createWarningNotification({
-            header: "invalid token",
-            description: "You need to login to view the images",
-          })
-        )
-      );
     }
   }, [token, current, pageSize]);
 
-  return {};
+  return { imagesData };
 };
 
 export default useUnidentifiedImages;

@@ -18,11 +18,17 @@ import { EventType } from "../../../../data/enums/EventType";
 import { LabelStatus } from "../../../../data/enums/LabelStatus";
 import { toBeIdentified } from "src/api/image/to_be_identified";
 import { getToken } from "src/utils/storage/token";
+import { get } from "lodash";
+import { ImageDataUtil } from "src/utils/ImageDataUtil";
+import { addImageData } from "src/store/labels/actionCreators";
+import { fetchOriginalImageFile } from "src/api/image/download";
+import { NotificationUtil } from "src/utils/NotificationUtil";
 
 interface IProps {
   activeImageIndex: number;
   imagesData: ImageData[];
   activeLabelType: LabelType;
+  addImageData: (imageData: ImageData[]) => void;
 }
 
 interface IState {
@@ -49,6 +55,39 @@ class ImagesList extends React.Component<IProps, IState> {
       toBeIdentified({ pageNumber: 0, pageSize: 20 })
         .then(res => {
           console.log("get pics success", res);
+          const pics = get(res, "data.content", []);
+
+          const imageDatas = pics.map(async pic => {
+            const { imageId } = pic;
+            const picFile = await fetchOriginalImageFile(imageId);
+
+            console.log("picFile", picFile);
+            const _blob = new Blob([picFile], { type: "image/jpeg" });
+            const _file = new File([_blob], "image.jpg", {
+              type: "image/jpeg",
+            });
+
+            return ImageDataUtil.createImageDataFromFileData(_file);
+          });
+
+          Promise.allSettled(imageDatas)
+            .then(synced_imageDatas => {
+              this.props.addImageData(
+                synced_imageDatas.map((result, index) => {
+                  if (result.status === "fulfilled") {
+                    return result.value;
+                  }
+                  console.error("Failed to load image", result);
+                  throw new Error(`Failed to load image, ${index}`);
+                })
+              );
+            })
+            .catch(err => {
+              NotificationUtil.createErrorNotification({
+                header: "Failed to load images",
+                description: err.message,
+              });
+            });
         })
         .catch(err => {
           console.log("get pics error", err);
@@ -143,12 +182,14 @@ class ImagesList extends React.Component<IProps, IState> {
   }
 }
 
-const mapDispatchToProps = {};
-
 const mapStateToProps = (state: AppState) => ({
   activeImageIndex: state.labels.activeImageIndex,
   imagesData: state.labels.imagesData,
   activeLabelType: state.labels.activeLabelType,
 });
+
+const mapDispatchToProps = {
+  addImageData,
+};
 
 export default connect(mapStateToProps, mapDispatchToProps)(ImagesList);

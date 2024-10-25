@@ -6,7 +6,6 @@ import { ImageButton } from "../../../Common/ImageButton/ImageButton";
 import { IRect } from "../../../../interfaces/IRect";
 import { IPoint } from "../../../../interfaces/IPoint";
 import { RectUtil } from "../../../../utils/RectUtil";
-import { AppState } from "../../../../store";
 import { connect } from "react-redux";
 import {
   updateActiveLabelId,
@@ -251,6 +250,4 @@ const mapDispatchToProps = {
   updateActivePopupType,
 };
 
-const mapStateToProps = (state: AppState) => ({});
-
-export default connect(mapStateToProps, mapDispatchToProps)(LabelInputField);
+export default connect(null, mapDispatchToProps)(LabelInputField);

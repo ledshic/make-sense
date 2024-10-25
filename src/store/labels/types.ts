@@ -71,6 +71,7 @@ export type LabelsState = {
   imagesData: ImageData[];
   firstLabelCreatedFlag: boolean;
   labels: LabelName[];
+  cloudLabels: LabelName[];
 };
 
 interface UpdateActiveImageIndex {
@@ -137,6 +138,13 @@ interface UpdateLabelNames {
   };
 }
 
+interface UpdateCloudLabels {
+  type: typeof Action.UPDATE_CLOUD_LABELS;
+  payload: {
+    cloudLabels: LabelName[];
+  };
+}
+
 interface UpdateFirstLabelCreatedFlag {
   type: typeof Action.UPDATE_FIRST_LABEL_CREATED_FLAG;
   payload: {
@@ -152,6 +160,7 @@ export type LabelsActionTypes =
   | AddImageData
   | UpdateImageData
   | UpdateLabelNames
+  | UpdateCloudLabels
   | UpdateActiveLabelId
   | UpdateHighlightedLabelId
   | UpdateFirstLabelCreatedFlag;

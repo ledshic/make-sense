@@ -90,6 +90,7 @@ export interface Request {
     headers?: any,
     requestOptions?: RequestOptions
   ) => Promise<any>;
+  file: (url: string) => Promise<any>;
 }
 
 const defaultHeaders = (hasToken = true, params?: any) => {
@@ -311,6 +312,17 @@ const request: Request = {
       .catch(err => {
         console.log("request failed", err);
       });
+  },
+  file: async (id: string) => {
+    try {
+      const response = await fetch(id, {
+        headers: defaultHeaders(),
+      });
+      return response.blob();
+    } catch (err) {
+      console.error("fetch original image file error", err);
+      return null;
+    }
   },
 };
 

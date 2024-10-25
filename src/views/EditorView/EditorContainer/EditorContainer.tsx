@@ -18,6 +18,7 @@ import EditorBottomNavigationBar from "../EditorBottomNavigationBar/EditorBottom
 import EditorTopNavigationBar from "../EditorTopNavigationBar/EditorTopNavigationBar";
 import { ProjectType } from "../../../data/enums/ProjectType";
 import { get } from "lodash";
+import { TopLabelEditor } from "../TopLabelEditor/TopLabelEditor";
 
 interface IProps {
   windowSize: ISize;
@@ -66,15 +67,13 @@ const EditorContainer: React.FC<IProps> = ({
 
   const leftSideBarCompanionRender = () => {
     return (
-      <>
-        <VerticalEditorButton
-          label="Images"
-          image={"/ico/camera.png"}
-          imageAlt={"images"}
-          onClick={leftSideBarButtonOnClick}
-          isActive={leftTabStatus}
-        />
-      </>
+      <VerticalEditorButton
+        label="Images"
+        image={"/ico/camera.png"}
+        imageAlt={"images"}
+        onClick={leftSideBarButtonOnClick}
+        isActive={leftTabStatus}
+      />
     );
   };
 
@@ -128,6 +127,7 @@ const EditorContainer: React.FC<IProps> = ({
         onMouseDown={() => ContextManager.switchCtx(ContextType.EDITOR)}
         key="editor-wrapper"
       >
+        <TopLabelEditor />
         {projectType === ProjectType.OBJECT_DETECTION && (
           <EditorTopNavigationBar key="editor-top-navigation-bar" />
         )}

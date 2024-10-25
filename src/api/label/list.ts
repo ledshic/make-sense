@@ -1,3 +1,10 @@
-import request from '../fetch';
+import request from "../fetch";
 
-export const fetchLabelList = async () => request.get('/api/label/list');
+interface LabelData {
+  labelId: string;
+  name: string;
+  number: number;
+}
+
+export const fetchLabelList = async () =>
+  request.get<LabelData[]>("/api/label/list");

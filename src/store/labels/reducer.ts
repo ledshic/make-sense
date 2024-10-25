@@ -10,6 +10,7 @@ const initialState: LabelsState = {
   imagesData: [],
   firstLabelCreatedFlag: false,
   labels: [],
+  cloudLabels: [],
 };
 
 export const imageDataTemplate: ImageData = {
@@ -88,6 +89,12 @@ export function labelsReducer(
       return {
         ...state,
         labels: action.payload.labels,
+      };
+    }
+    case Action.UPDATE_CLOUD_LABELS: {
+      return {
+        ...state,
+        cloudLabels: action.payload.cloudLabels,
       };
     }
     case Action.UPDATE_FIRST_LABEL_CREATED_FLAG: {

@@ -21,7 +21,6 @@ const LoadMoreImagesPopup: React.FC<IProps> = ({ addImages }) => {
 
   const onAccept = () => {
     if (acceptedFiles.length > 0) {
-      console.log("acceptedFiles", acceptedFiles);
       addImages(
         acceptedFiles.map((fileData: File) =>
           ImageDataUtil.createImageDataFromFileData(fileData)
