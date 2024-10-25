@@ -1,18 +1,19 @@
 import React, { useState } from "react";
-import "./ExportLabelPopup.scss";
+import { connect } from "react-redux";
+
 import { AnnotationFormatType } from "../../../data/enums/AnnotationFormatType";
-import { RectLabelsExporter } from "../../../logic/export/RectLabelsExporter";
 import { LabelType } from "../../../data/enums/LabelType";
 import { ILabelFormatData } from "../../../interfaces/ILabelFormatData";
-import { PointLabelsExporter } from "../../../logic/export/PointLabelsExport";
-import { PolygonLabelsExporter } from "../../../logic/export/polygon/PolygonLabelsExporter";
 import { PopupActions } from "../../../logic/actions/PopupActions";
-import { LineLabelsExporter } from "../../../logic/export/LineLabelExport";
-import { TagLabelsExporter } from "../../../logic/export/TagLabelsExport";
 import GenericLabelTypePopup from "../GenericLabelTypePopup/GenericLabelTypePopup";
 import { ExportFormatData } from "../../../data/ExportFormatData";
 import { AppState } from "../../../store";
-import { connect } from "react-redux";
+
+import "./SubmitLabelsPopup.scss";
+import { LabelsSelector } from "src/store/selectors/LabelsSelector";
+import type { ImageData } from "src/store/labels/types";
+import { RectLabelsExporter } from "src/logic/export/RectLabelsExporter";
+import { upload } from "src/api/image/label/upload";
 
 interface IProps {
   activeLabelType: LabelType;
@@ -22,24 +23,32 @@ const ExportLabelPopup: React.FC<IProps> = ({ activeLabelType }) => {
   const [labelType, setLabelType] = useState(activeLabelType);
   const [exportFormatType, setExportFormatType] = useState(null);
 
-  const onAccept = (type: LabelType) => {
-    switch (type) {
-      case LabelType.RECT:
-        RectLabelsExporter.export(exportFormatType);
-        break;
-      case LabelType.POINT:
-        PointLabelsExporter.export(exportFormatType);
-        break;
-      case LabelType.LINE:
-        LineLabelsExporter.export(exportFormatType);
-        break;
-      case LabelType.POLYGON:
-        PolygonLabelsExporter.export(exportFormatType);
-        break;
-      case LabelType.IMAGE_RECOGNITION:
-        TagLabelsExporter.export(exportFormatType);
-        break;
-    }
+  const onAccept = async () => {
+    LabelsSelector.getImagesData().forEach((imageData: ImageData) => {
+      const {
+        raw_data: { imageId, name },
+      } = imageData;
+      const fileContent: string =
+        RectLabelsExporter.wrapRectLabelsIntoYOLO(imageData);
+      if (fileContent) {
+        const fileName: string = name.replace(/\.[^/.]+$/, ".txt");
+
+        const txtFile = new File([fileContent], fileName, {
+          type: "text/plain",
+          lastModified: Date.now(),
+        });
+
+        try {
+          console.log("prepare to upload << ", txtFile);
+          console.log("relative image << ", imageData);
+          upload(imageId, txtFile).then(res => {
+            console.log("upload res << ", res);
+          });
+        } catch (error) {
+          console.log("error", error);
+        }
+      }
+    });
     PopupActions.close();
   };
 

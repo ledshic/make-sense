@@ -1,12 +1,16 @@
-import { ImageData } from "../store/labels/types";
+import { ImageData, OriginalImageData } from "../store/labels/types";
 import { v4 as uuidv4 } from "uuid";
 import { FileUtil } from "./FileUtil";
 import { ImageRepository } from "../logic/imageRepository/ImageRepository";
 
 export class ImageDataUtil {
-  public static createImageDataFromFileData(fileData: File): ImageData {
+  public static createImageDataFromFileData(
+    fileData: File,
+    raw_image?: OriginalImageData
+  ): ImageData {
     return {
       id: uuidv4(),
+      raw_data: raw_image,
       fileData,
       loadStatus: false,
       labelRects: [],

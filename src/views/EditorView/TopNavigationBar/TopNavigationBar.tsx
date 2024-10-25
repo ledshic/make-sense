@@ -3,8 +3,6 @@ import { connect } from "react-redux";
 import { Button } from "@mui/material";
 
 import TextInput from "../../Common/TextInput/TextInput";
-// import { ImageButton } from "../../Common/ImageButton/ImageButton";
-// import { Settings } from "../../../settings/Settings";
 import { ProjectData } from "../../../store/general/types";
 import DropDownMenu from "./DropDownMenu/DropDownMenu";
 import StateBar from "../StateBar/StateBar";
@@ -43,7 +41,9 @@ const TopNavigationBar: React.FC<IProps> = props => {
   const closePopup = () =>
     props.updateActivePopupTypeAction(PopupWindowType.EXIT_PROJECT);
 
-  const handleSubmit = () => console.log("submit");
+  const handleSubmit = () => {
+    props.updateActivePopupTypeAction(PopupWindowType.SUBMIT_ANNOTATIONS);
+  };
 
   return (
     <div className="TopNavigationBar">

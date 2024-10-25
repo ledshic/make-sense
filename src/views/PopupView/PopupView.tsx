@@ -12,6 +12,7 @@ import { CSSHelper } from "../../logic/helpers/CSSHelper";
 import { ClipLoader } from "react-spinners";
 import ImportLabelPopup from "./ImportLabelPopup/ImportLabelPopup";
 import ExportLabelPopup from "./ExportLabelsPopup/ExportLabelPopup";
+import SubmitLabelsPopup from "./SubmitLabelsPopup/SubmitLabelsPopup";
 import LoadModelPopup from "./LoadModelPopup/LoadModelPopup";
 import LoadYOLOv5ModelPopup from "./LoadYOLOv5ModelPopup/LoadYOLOv5ModelPopup";
 import ConnectInferenceServerPopup from "./ConnectInferenceServerPopup/ConnectInferenceServerPopup";
@@ -29,6 +30,8 @@ const PopupView: React.FC<IProps> = ({ activePopupType }) => {
         return <LoadLabelsPopup />;
       case PopupWindowType.EXPORT_ANNOTATIONS:
         return <ExportLabelPopup />;
+      case PopupWindowType.SUBMIT_ANNOTATIONS:
+        return <SubmitLabelsPopup />;
       case PopupWindowType.IMPORT_ANNOTATIONS:
         return <ImportLabelPopup />;
       case PopupWindowType.INSERT_LABEL_NAMES:
@@ -39,14 +42,14 @@ const PopupView: React.FC<IProps> = ({ activePopupType }) => {
         return <ExitProjectPopup />;
       case PopupWindowType.IMPORT_IMAGES:
         return <LoadMoreImagesPopup />;
-      case PopupWindowType.LOAD_AI_MODEL:
-        return <LoadModelPopup />;
+      // case PopupWindowType.LOAD_AI_MODEL:
+      //   return <LoadModelPopup />;
       case PopupWindowType.LOAD_YOLO_V5_MODEL:
         return <LoadYOLOv5ModelPopup />;
-      case PopupWindowType.CONNECT_AI_MODEL_VIA_API:
-        return <ConnectInferenceServerPopup />;
-      case PopupWindowType.SUGGEST_LABEL_NAMES:
-        return <SuggestLabelNamesPopup />;
+      // case PopupWindowType.CONNECT_AI_MODEL_VIA_API:
+      //   return <ConnectInferenceServerPopup />;
+      // case PopupWindowType.SUGGEST_LABEL_NAMES:
+      //   return <SuggestLabelNamesPopup />;
       case PopupWindowType.LOADER:
         return (
           <ClipLoader

@@ -54,20 +54,20 @@ class ImagesList extends React.Component<IProps, IState> {
     if (token) {
       toBeIdentified({ pageNumber: 0, pageSize: 20 })
         .then(res => {
-          console.log("get pics success", res);
+          console.log("get pics success << ", res);
           const pics = get(res, "data.content", []);
 
           const imageDatas = pics.map(async pic => {
             const { imageId } = pic;
             const picFile = await fetchOriginalImageFile(imageId);
 
-            console.log("picFile", picFile);
+            console.log("originala picFile << ", picFile);
             const _blob = new Blob([picFile], { type: "image/jpeg" });
             const _file = new File([_blob], "image.jpg", {
               type: "image/jpeg",
             });
 
-            return ImageDataUtil.createImageDataFromFileData(_file);
+            return ImageDataUtil.createImageDataFromFileData(_file, pic);
           });
 
           Promise.allSettled(imageDatas)

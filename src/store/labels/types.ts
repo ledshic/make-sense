@@ -39,8 +39,21 @@ export type LabelName = {
   color?: string;
 };
 
+export type OriginalImageData = {
+  name: string;
+  imageId: string;
+  path: string;
+  md5: string;
+  suffix: string;
+  size: number;
+  status: number;
+  createTime: string;
+  updateTime: string;
+};
+
 export type ImageData = {
   id: string;
+  raw_data: OriginalImageData;
   fileData: File;
   loadStatus: boolean;
   labelRects: LabelRect[];
