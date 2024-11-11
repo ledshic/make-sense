@@ -20,7 +20,7 @@ import { toBeIdentified } from "src/api/image/to_be_identified";
 import { getToken } from "src/utils/storage/token";
 import { get } from "lodash";
 import { ImageDataUtil } from "src/utils/ImageDataUtil";
-import { addImageData } from "src/store/labels/actionCreators";
+import { addImageData, updateImageData } from "src/store/labels/actionCreators";
 import { fetchOriginalImageFile } from "src/api/image/download";
 import { NotificationUtil } from "src/utils/NotificationUtil";
 
@@ -29,6 +29,7 @@ interface IProps {
   imagesData: ImageData[];
   activeLabelType: LabelType;
   addImageData: (imageData: ImageData[]) => void;
+  updateImageData: (imageData: ImageData[]) => void;
 }
 
 interface IState {
@@ -54,16 +55,17 @@ class ImagesList extends React.Component<IProps, IState> {
     if (token) {
       toBeIdentified({ pageNumber: 0, pageSize: 20 })
         .then(res => {
-          console.log("get pics success << ", res);
+          console.log("toBeIndentified << res << ", res);
           const pics = get(res, "data.content", []);
 
-          const imageDatas = pics.map(async pic => {
+          const imageDatas = pics.map(async (pic, index) => {
+            console.log("pic << ", pic);
             const { imageId } = pic;
             const picFile = await fetchOriginalImageFile(imageId);
 
-            console.log("originala picFile << ", picFile);
+            console.info("original << picFile << ", picFile);
             const _blob = new Blob([picFile], { type: "image/jpeg" });
-            const _file = new File([_blob], "image.jpg", {
+            const _file = new File([_blob], `${pic.name}.${pic.suffix}`, {
               type: "image/jpeg",
             });
 
@@ -72,15 +74,18 @@ class ImagesList extends React.Component<IProps, IState> {
 
           Promise.allSettled(imageDatas)
             .then(synced_imageDatas => {
-              this.props.addImageData(
-                synced_imageDatas.map((result, index) => {
-                  if (result.status === "fulfilled") {
-                    return result.value;
-                  }
-                  console.error("Failed to load image", result);
-                  throw new Error(`Failed to load image, ${index}`);
-                })
-              );
+              console.log("synced_imageDatas << ", synced_imageDatas);
+
+              const images = synced_imageDatas.map((result, index) => {
+                if (result.status === "fulfilled") {
+                  return result.value;
+                }
+
+                console.warn("Failed to load image", result);
+                throw new Error(`Failed to load image, ${index}`);
+              });
+
+              this.props.updateImageData(images);
             })
             .catch(err => {
               NotificationUtil.createErrorNotification({
@@ -148,7 +153,7 @@ class ImagesList extends React.Component<IProps, IState> {
   ) => {
     return (
       <ImagePreview
-        key={index}
+        key={this.props.imagesData[index].id || index}
         style={style}
         size={{ width: 150, height: 150 }}
         isScrolling={isScrolling}
@@ -190,6 +195,7 @@ const mapStateToProps = (state: AppState) => ({
 
 const mapDispatchToProps = {
   addImageData,
+  updateImageData,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(ImagesList);

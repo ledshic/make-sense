@@ -68,7 +68,7 @@ const EditorContainer: React.FC<IProps> = ({
   const leftSideBarCompanionRender = () => {
     return (
       <VerticalEditorButton
-        label="Images"
+        label="图片管理"
         image={"/ico/camera.png"}
         imageAlt={"images"}
         onClick={leftSideBarButtonOnClick}
@@ -93,7 +93,7 @@ const EditorContainer: React.FC<IProps> = ({
     return (
       <>
         <VerticalEditorButton
-          label="Labels"
+          label="标签管理"
           image={"/ico/tags.png"}
           imageAlt={"labels"}
           onClick={rightSideBarButtonOnClick}
@@ -107,10 +107,16 @@ const EditorContainer: React.FC<IProps> = ({
     return <LabelsToolkit />;
   };
 
-  const activeImg = useMemo(
-    () => get(imagesData, activeImageIndex, imageDataTemplate),
-    [imagesData, activeImageIndex]
-  );
+  const activeImg = useMemo(() => {
+    console.log("imagesData << ", imagesData);
+    console.log("activeImageIndex << ", activeImageIndex);
+    console.log("imageDataTemplate << ", imageDataTemplate);
+    const activeImage = get(imagesData, activeImageIndex, imageDataTemplate);
+
+    console.log("activeImage << ", activeImage);
+
+    return activeImage;
+  }, [imagesData, activeImageIndex]);
 
   return (
     <div className="EditorContainer">

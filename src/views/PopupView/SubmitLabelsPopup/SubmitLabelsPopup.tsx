@@ -9,11 +9,13 @@ import GenericLabelTypePopup from "../GenericLabelTypePopup/GenericLabelTypePopu
 import { ExportFormatData } from "../../../data/ExportFormatData";
 import { AppState } from "../../../store";
 
-import "./SubmitLabelsPopup.scss";
 import { LabelsSelector } from "src/store/selectors/LabelsSelector";
 import type { ImageData } from "src/store/labels/types";
 import { RectLabelsExporter } from "src/logic/export/RectLabelsExporter";
 import { upload } from "src/api/image/label/upload";
+import useUnidentifiedImages from "src/hooks/images";
+
+import "./SubmitLabelsPopup.scss";
 
 interface IProps {
   activeLabelType: LabelType;
@@ -22,6 +24,12 @@ interface IProps {
 const ExportLabelPopup: React.FC<IProps> = ({ activeLabelType }) => {
   const [labelType, setLabelType] = useState(activeLabelType);
   const [exportFormatType, setExportFormatType] = useState(null);
+
+  const { refreshImages } = useUnidentifiedImages({
+    current: 0,
+    pageSize: 20,
+    initialLoad: false,
+  });
 
   const onAccept = async () => {
     LabelsSelector.getImagesData().forEach((imageData: ImageData) => {
@@ -39,13 +47,14 @@ const ExportLabelPopup: React.FC<IProps> = ({ activeLabelType }) => {
         });
 
         try {
-          console.log("prepare to upload << ", txtFile);
-          console.log("relative image << ", imageData);
+          console.info("prepare to upload << txtFile << ", txtFile);
+          console.info("relative image << imageData << ", imageData);
           upload(imageId, txtFile).then(res => {
-            console.log("upload res << ", res);
+            console.info("upload << res << ", res);
+            refreshImages();
           });
         } catch (error) {
-          console.log("error", error);
+          console.warn("error", error);
         }
       }
     });
@@ -90,11 +99,8 @@ const ExportLabelPopup: React.FC<IProps> = ({ activeLabelType }) => {
   const renderInternalContent = (type: LabelType) => {
     return (
       <>
-        <div className="Message">
-          Select label type and the file format you would like to use to export
-          labels.
-        </div>
-        ,<div className="Options">{getOptions(ExportFormatData[type])}</div>
+        <div className="Message">选择要提交的标注格式</div>,
+        <div className="Options">{getOptions(ExportFormatData[type])}</div>
       </>
     );
   };
@@ -107,12 +113,12 @@ const ExportLabelPopup: React.FC<IProps> = ({ activeLabelType }) => {
   return (
     <GenericLabelTypePopup
       activeLabelType={labelType}
-      title={`Export ${labelType.toLowerCase()} annotations`}
+      title={`提交标注`}
       onLabelTypeChange={onLabelTypeChange}
-      acceptLabel={"Export"}
+      acceptLabel="提交"
       onAccept={onAccept}
       disableAcceptButton={!exportFormatType}
-      rejectLabel={"Cancel"}
+      rejectLabel="取消"
       onReject={onReject}
       renderInternalContent={renderInternalContent}
     />

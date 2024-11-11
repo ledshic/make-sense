@@ -53,7 +53,7 @@ export type OriginalImageData = {
 
 export type ImageData = {
   id: string;
-  raw_data: OriginalImageData;
+  raw_data: Partial<OriginalImageData>;
   fileData: File;
   loadStatus: boolean;
   labelRects: LabelRect[];

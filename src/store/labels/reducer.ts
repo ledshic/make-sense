@@ -15,7 +15,7 @@ const initialState: LabelsState = {
 
 export const imageDataTemplate: ImageData = {
   id: "",
-  imageId: '',
+  raw_data: {},
   fileData: new File([], ""),
   loadStatus: false,
   labelRects: [],

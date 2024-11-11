@@ -123,8 +123,8 @@ const RectLabelsList: React.FC<IProps> = ({
         (labelRect: LabelRect) => labelRect.status === LabelStatus.ACCEPTED
       ).length === 0 ? (
         <EmptyLabelList
-          labelBefore={"draw your first bounding box"}
-          labelAfter={"no labels created for this image yet"}
+          labelBefore={"绘制第一个图形以开始标注"}
+          labelAfter={"暂时还没有标签"}
         />
       ) : (
         <Scrollbars>

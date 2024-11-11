@@ -1,3 +1,4 @@
+/* eslint-disable */
 import { LabelsSelector } from "../../store/selectors/LabelsSelector";
 import { store } from "../../index";
 import {
@@ -34,6 +35,9 @@ export class ImageActions {
     if (EditorModel.viewPortActionsDisabled) return;
 
     const imageCount: number = LabelsSelector.getImagesData().length;
+
+    console.log("getImageByIndex << index << ", index);
+    console.log("getImageByIndex << imageCount << ", imageCount);
 
     if (index < 0 || index > imageCount - 1) {
       return;

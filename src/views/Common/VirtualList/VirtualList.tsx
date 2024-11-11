@@ -1,7 +1,4 @@
 import React from "react";
-import { Button } from "@mui/material";
-import { styled } from "@mui/material/styles";
-import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 
 import { uploadUnidentifiedPics } from "src/api/image/upload";
 import { ISize } from "../../../interfaces/ISize";
@@ -13,18 +10,6 @@ import { RectUtil } from "../../../utils/RectUtil";
 import { store } from "src/index";
 import { submitNewNotification } from "src/store/notifications/actionCreators";
 import { NotificationUtil } from "src/utils/NotificationUtil";
-
-const VisuallyHiddenInput = styled("input")({
-  clip: "rect(0 0 0 0)",
-  clipPath: "inset(50%)",
-  height: 1,
-  overflow: "hidden",
-  position: "absolute",
-  bottom: 0,
-  left: 0,
-  whiteSpace: "nowrap",
-  width: 1,
-});
 
 interface IProps {
   size: ISize;
@@ -222,7 +207,7 @@ export class VirtualList extends React.Component<IProps, IState> {
           onScrollStop={this.onScrollStop}
           autoHide={true}
         >
-          <div
+          {/* <div
             style={{
               width: "100%",
               display: "flex",
@@ -246,7 +231,7 @@ export class VirtualList extends React.Component<IProps, IState> {
                 multiple
               />
             </Button>
-          </div>
+          </div> */}
 
           {displayContent && (
             <div

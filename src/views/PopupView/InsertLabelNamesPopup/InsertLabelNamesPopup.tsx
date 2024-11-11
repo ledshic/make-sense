@@ -157,7 +157,7 @@ const InsertLabelNamesPopup: React.FC<IProps> = ({
           autoFocus={true}
           type={"text"}
           margin={"dense"}
-          label={"Insert label"}
+          label={"标签"}
           onKeyUp={onKeyUpCallback}
           value={labelName.name}
           onChange={onChangeCallback}
@@ -265,10 +265,10 @@ const InsertLabelNamesPopup: React.FC<IProps> = ({
         <div className="RightContainer">
           <div className="Message">
             {isUpdate
-              ? "You can now edit the label names you use to describe the objects in the photos. Use the " +
-                "+ button to add a new empty text field."
-              : "Before you start, you can create a list of labels you plan to assign to objects in your " +
-                "project. You can also choose to skip that part for now and define label names as you go."}
+              ? "你可以随时编辑这些用于描述标注的标签名称。使用" +
+                "+ 键添加一个新的标签栏位"
+              : "在你开始标注前，你可以先创建一个标签列表。" +
+                "你也可以先跳过这一步等到标注时再创建标签。"}
           </div>
           <div className="LabelsContainer">
             {Object.keys(labelNames).length !== 0 ? (
@@ -284,7 +284,7 @@ const InsertLabelNamesPopup: React.FC<IProps> = ({
                   alt={"upload"}
                   src={"ico/type-writer.png"}
                 />
-                <p className="extraBold">Your label list is empty</p>
+                <p className="extraBold">你还没有创建任何标签</p>
               </div>
             )}
           </div>
@@ -295,13 +295,13 @@ const InsertLabelNamesPopup: React.FC<IProps> = ({
 
   return (
     <GenericYesNoPopup
-      title={isUpdate ? "Edit labels" : "Create labels"}
+      title={isUpdate ? "管理标签" : "上传标签"}
       renderContent={renderContent}
-      acceptLabel={isUpdate ? "Accept" : "Start project"}
+      acceptLabel={isUpdate ? "确认" : "创建项目"}
       onAccept={
         isUpdate ? safeOnUpdateAcceptCallback : safeOnCreateAcceptCallback
       }
-      rejectLabel={isUpdate ? "Cancel" : "Load labels from file"}
+      rejectLabel={isUpdate ? "取消" : "从文件中载入标签"}
       onReject={isUpdate ? onUpdateRejectCallback : onCreateRejectCallback}
     />
   );

@@ -10,4 +10,11 @@
   font-size: 14px;
   font-weight: 500;
   color: #333;
+
+  &__list {
+    flex-grow: 1;
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: flex-start;
+  }
 }

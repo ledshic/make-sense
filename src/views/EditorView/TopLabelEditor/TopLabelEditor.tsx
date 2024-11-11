@@ -41,7 +41,7 @@ export const TopLabelEditor = () => {
 
   return (
     <div className="TopLabelEditor">
-      <div className="TopLabelEditor__label">Label:</div>
+      <div className="TopLabelEditor__label">标签:</div>
       <div className="TopLabelEditor__list">
         <StyledToggleButtonGroup>
           {labels.map((label, index) => (
@@ -67,7 +67,7 @@ export const TopLabelEditor = () => {
           dispatch(updateActivePopupType(PopupWindowType.UPDATE_LABEL))
         }
       >
-        add label
+        添加标签
       </Button>
     </div>
   );

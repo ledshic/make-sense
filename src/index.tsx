@@ -13,9 +13,9 @@ const root = ReactDOM.createRoot(
   document.getElementById("root") || document.createElement("div")
 );
 root.render(
-  <React.StrictMode>
-    <Provider store={store}>
-      <App />
-    </Provider>
-  </React.StrictMode>
+  // <React.StrictMode>
+  <Provider store={store}>
+    <App />
+  </Provider>
+  // </React.StrictMode>
 );

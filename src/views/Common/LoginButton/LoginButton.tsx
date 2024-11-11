@@ -30,7 +30,7 @@ const LoginButton: React.FC<IProps> = () => {
         <Avatar sx={{ width: 24, height: 24 }} />
       ) : (
         <Button onClick={handleLogin}>
-          <span style={{ color: "#fff" }}>Login</span>
+          <span style={{ color: "#fff" }}>登录</span>
         </Button>
       )}
     </>

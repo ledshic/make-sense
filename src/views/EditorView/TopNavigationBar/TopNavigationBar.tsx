@@ -50,20 +50,20 @@ const TopNavigationBar: React.FC<IProps> = props => {
       <StateBar />
       <div className="TopNavigationBarWrapper">
         <div className="NavigationBarGroupWrapper">
-          <div className="Header" onClick={closePopup}>
+          {/* <div className="Header" onClick={closePopup}>
             <img
               draggable={false}
               alt={"make-sense"}
               src={"/make-sense-ico-transparent.png"}
             />
             Make Sense
-          </div>
+          </div> */}
         </div>
         <div className="NavigationBarGroupWrapper">
           <DropDownMenu />
         </div>
         <div className="NavigationBarGroupWrapper middle">
-          <div className="ProjectName">Project Name:</div>
+          <div className="ProjectName">名称:</div>
           <TextInput
             isPassword={false}
             value={props.projectData.name}
@@ -74,7 +74,7 @@ const TopNavigationBar: React.FC<IProps> = props => {
         <div className="NavigationBarGroupWrapper">
           <LoginButton />
           <Button onClick={handleSubmit}>
-            <span style={{ color: "#fff" }}>Submit</span>
+            <span style={{ color: "#fff" }}>提交</span>
           </Button>
         </div>
       </div>

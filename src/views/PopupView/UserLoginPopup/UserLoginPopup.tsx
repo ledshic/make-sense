@@ -44,10 +44,10 @@ const UserLoginPopup = () => {
   return (
     <div className="user-login-window">
       <div className="login-form">
-        <h2>Login</h2>
+        <h2>登录</h2>
 
         <fieldset>
-          <legend>account</legend>
+          <legend>账号</legend>
           <input
             type="text"
             name="account"
@@ -59,7 +59,7 @@ const UserLoginPopup = () => {
         </fieldset>
 
         <fieldset>
-          <legend>password</legend>
+          <legend>密码</legend>
           <input
             type="password"
             name="password"
@@ -71,9 +71,9 @@ const UserLoginPopup = () => {
         </fieldset>
 
         <div className="footer">
-          <Button onClick={handleLogin}>Login</Button>
-          <Button onClick={handleCancel}>Cancel</Button>
-          <Button onClick={handleRegister}>Register</Button>
+          <Button onClick={handleLogin}>登录</Button>
+          <Button onClick={handleCancel}>取消</Button>
+          <Button onClick={handleRegister}>注册</Button>
         </div>
       </div>
     </div>
